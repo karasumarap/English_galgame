@@ -1,0 +1,90 @@
+[
+  {
+    "id": "greet_nice_to_meet_you",
+    "en": "Nice to meet you.",
+    "jp": "初めまして。",
+    "tags": ["greeting", "polite"],
+    "context": "First meeting, formal introduction",
+    "intervals": {
+      "ease": 2.5,
+      "streak": 0
+    }
+  },
+  {
+    "id": "casual_checking_out",
+    "en": "Just checking this place out.",
+    "jp": "ちょっと見に来ただけ。",
+    "tags": ["casual", "exploration"],
+    "context": "Informal conversation about visiting a new place",
+    "intervals": {
+      "ease": 2.5,
+      "streak": 0
+    }
+  },
+  {
+    "id": "express_nervous",
+    "en": "I'm a bit nervous.",
+    "jp": "ちょっと緊張してます。",
+    "tags": ["emotion", "honesty"],
+    "context": "Expressing feelings in a new situation",
+    "intervals": {
+      "ease": 2.5,
+      "streak": 0
+    }
+  },
+  {
+    "id": "express_preference_love",
+    "en": "I love coffee!",
+    "jp": "コーヒーが大好き！",
+    "tags": ["preference", "strong"],
+    "context": "Expressing strong preference",
+    "intervals": {
+      "ease": 2.5,
+      "streak": 0
+    }
+  },
+  {
+    "id": "express_preference_prefer",
+    "en": "I prefer tea.",
+    "jp": "紅茶の方が好き。",
+    "tags": ["preference", "comparison"],
+    "context": "Comparing preferences politely",
+    "intervals": {
+      "ease": 2.5,
+      "streak": 0
+    }
+  },
+  {
+    "id": "cant_start_day_without",
+    "en": "I can't start my day without...",
+    "jp": "...がないと一日が始まらない",
+    "tags": ["routine", "necessity"],
+    "context": "Expressing daily habits",
+    "intervals": {
+      "ease": 2.5,
+      "streak": 0
+    }
+  },
+  {
+    "id": "grab_something_together",
+    "en": "Let's grab [something] together sometime!",
+    "jp": "今度一緒に[何か]しようよ！",
+    "tags": ["invitation", "casual"],
+    "context": "Casual invitation to hang out",
+    "intervals": {
+      "ease": 2.5,
+      "streak": 0
+    }
+  },
+  {
+    "id": "see_you_around",
+    "en": "See you around!",
+    "jp": "またね！",
+    "tags": ["farewell", "casual"],
+    "context": "Casual goodbye",
+    "intervals": {
+      "ease": 2.5,
+      "streak": 0
+    }
+  }
+]
