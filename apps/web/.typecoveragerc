@@ -1,0 +1,18 @@
+{
+  "atLeast": 90,
+  "strict": true,
+  "ignoreCatch": true,
+  "ignoreFiles": [
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
+    "**/__tests__/**",
+    "**/test/**",
+    "**/*.config.ts",
+    "**/*.config.js",
+    "vite.config.ts",
+    "vitest.config.ts",
+    "playwright.config.ts"
+  ]
+}
