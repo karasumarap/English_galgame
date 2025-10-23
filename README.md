@@ -94,7 +94,12 @@ English_galgame/
 
 ## 🎨 開発
 
+### 基本コマンド
+
 ```bash
+# 開発サーバー起動
+pnpm dev
+
 # Lint
 pnpm lint
 
@@ -106,6 +111,82 @@ pnpm build
 
 # プレビュー
 pnpm preview
+```
+
+## 🧪 テスト
+
+### 包括的テスト（推奨）
+
+```bash
+# 全ての品質チェックを一度に実行
+# - 型チェック (tsc --noEmit)
+# - Lint (eslint)
+# - ユニットテスト + カバレッジ
+# - 型カバレッジ (99.64%)
+pnpm test
+```
+
+**出力例:**
+```
+✓ Test Files: 6 passed (6)
+✓ Tests: 87 passed (87)
+
+Coverage Report:
+Statements: 98.93% | Branches: 91.58% | Functions: 100% | Lines: 100%
+
+Type Coverage: 99.64% (5014/5032)
+```
+
+### 個別テストコマンド
+
+```bash
+# ユニットテストのみ（ウォッチモード）
+pnpm test:watch
+
+# カバレッジレポート生成
+pnpm test:coverage
+
+# E2Eテスト（Playwright）
+pnpm test:e2e
+
+# ミューテーションテスト（Stryker）- ユニット層のみ
+pnpm test:mutation
+
+# 型カバレッジチェック（≥90%）
+pnpm type-coverage
+
+# CI用完全テストスイート（E2E + ミューテーション含む）
+pnpm test:ci
+```
+
+### テストカバレッジ目標
+
+| メトリクス | 目標 | 現在 |
+|-----------|------|------|
+| Statements | ≥90% | 98.93% ✅ |
+| Branches | ≥90% | 91.58% ✅ |
+| Functions | ≥90% | 100% ✅ |
+| Lines | ≥90% | 100% ✅ |
+| Type Coverage | ≥90% | 99.64% ✅ |
+| Mutation Score | ≥70% | - (ユニット層のみ) |
+
+### テストファイル構成
+
+```
+apps/web/src/
+├── components/__tests__/
+│   ├── ChoiceList.test.tsx
+│   └── DialogueBox.test.tsx
+├── engine/__tests__/
+│   ├── cardLoader.test.ts
+│   ├── loader.test.ts
+│   ├── runtime.test.ts
+│   └── srs.test.ts
+└── test/
+    └── setup.ts          # テスト環境設定
+
+apps/web/e2e/
+└── chapter1.spec.ts      # E2Eテスト
 ```
 
 ## 🤝 コントリビューション

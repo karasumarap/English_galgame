@@ -148,7 +148,7 @@ const ReviewQuiz = ({ cards, onComplete, onExit }: ReviewQuizProps) => {
           </div>
         )
 
-      case 'fill':
+      case 'fill': {
         // 簡易的な穴埋め
         const words = currentCard.en.split(' ')
         const blankIndex = Math.floor(words.length / 2)
@@ -199,8 +199,9 @@ const ReviewQuiz = ({ cards, onComplete, onExit }: ReviewQuizProps) => {
             )}
           </div>
         )
+      }
 
-      case 'order':
+      case 'order': {
         // 並べ替え（簡易実装）
         return (
           <div>
@@ -250,6 +251,7 @@ const ReviewQuiz = ({ cards, onComplete, onExit }: ReviewQuizProps) => {
             )}
           </div>
         )
+      }
     }
   }
 
