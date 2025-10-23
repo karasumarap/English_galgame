@@ -16,7 +16,44 @@
         "en": "Emma",
         "jp": "エマ"
       },
-      "sprite": "/assets/characters/emma_smile.png"
+      "sprites": {
+        "default": "/assets/characters/emma/ema.png",
+        "emotions": {
+          "normal": "/assets/characters/emma/ema.png",
+          "smile": "/assets/characters/emma/ema.png",
+          "happy": "/assets/characters/emma/ema.png",
+          "kind": "/assets/characters/emma/ema.png",
+          "angry": "/assets/characters/emma/ema.png",
+          "sad": "/assets/characters/emma/ema.png",
+          "surprised": "/assets/characters/emma/ema.png"
+        },
+        "outfits": {
+          "uniform": {
+            "default": "/assets/characters/emma/ema.png",
+            "emotions": {
+              "normal": "/assets/characters/emma/ema.png",
+              "smile": "/assets/characters/emma/ema.png",
+              "happy": "/assets/characters/emma/ema.png",
+              "kind": "/assets/characters/emma/ema.png",
+              "angry": "/assets/characters/emma/ema.png",
+              "sad": "/assets/characters/emma/ema.png",
+              "surprised": "/assets/characters/emma/ema.png"
+            }
+          },
+          "casual": {
+            "default": "/assets/characters/emma/ema.png",
+            "emotions": {
+              "normal": "/assets/characters/emma/ema.png",
+              "smile": "/assets/characters/emma/ema.png",
+              "happy": "/assets/characters/emma/ema.png",
+              "kind": "/assets/characters/emma/ema.png",
+              "angry": "/assets/characters/emma/ema.png",
+              "sad": "/assets/characters/emma/ema.png",
+              "surprised": "/assets/characters/emma/ema.png"
+            }
+          }
+        }
+      }
     }
   ],
   "script": [
@@ -27,7 +64,8 @@
         "en": "Hi! Are you new here?",
         "jp": "やあ！ここは初めて？"
       },
-      "emotion": "smile"
+      "emotion": "smile",
+      "position": "center"
     },
     {
       "type": "choice",
@@ -85,7 +123,8 @@
         "en": "Nice to meet you too! I'm Emma. I'm an exchange student from the UK.",
         "jp": "初めまして！私はエマ。イギリスからの交換留学生なの。"
       },
-      "emotion": "happy"
+      "emotion": "happy",
+      "position": "center"
     },
     {
       "type": "goto",
@@ -102,7 +141,8 @@
         "en": "Oh, cool! The coffee here is amazing. I'm Emma, by the way.",
         "jp": "へえ、いいね！ここのコーヒーは最高だよ。私はエマっていうの。"
       },
-      "emotion": "smile"
+      "emotion": "smile",
+      "position": "center"
     },
     {
       "type": "goto",
@@ -119,7 +159,12 @@
         "en": "Aw, don't worry! Everyone's nervous on their first day. I'm Emma. Let me help you feel at home here!",
         "jp": "あら、心配しないで！初日はみんな緊張するものよ。私はエマ。ここに慣れるの手伝うね！"
       },
-      "emotion": "kind"
+      "emotion": "kind",
+      "position": "center"
+    },
+    {
+      "type": "goto",
+      "target": "ask_about_drink"
     },
     {
       "type": "label",
@@ -131,7 +176,9 @@
       "text": {
         "en": "So, do you like coffee or tea?",
         "jp": "それで、コーヒーと紅茶どっちが好き？"
-      }
+      },
+      "emotion": "normal",
+      "position": "center"
     },
     {
       "type": "choice",
@@ -183,7 +230,8 @@
         "en": "Me too! I can't start my day without a good latte. We should grab one together sometime!",
         "jp": "私も！美味しいラテがないと一日が始まらないの。今度一緒に飲もうよ！"
       },
-      "emotion": "excited"
+      "emotion": "excited",
+      "position": "center"
     },
     {
       "type": "goto",
@@ -200,7 +248,8 @@
         "en": "Ah, a tea lover! That's very British of you. I approve! Let's have tea together soon.",
         "jp": "あら、お茶好きなんだ！とってもイギリス的ね。いいと思う！今度一緒にお茶しようよ。"
       },
-      "emotion": "happy"
+      "emotion": "happy",
+      "position": "center"
     },
     {
       "type": "label",
@@ -213,7 +262,8 @@
         "en": "I think we're going to be great friends! See you around!",
         "jp": "私たち、いい友達になれそうね！またね！"
       },
-      "emotion": "smile"
+      "emotion": "smile",
+      "position": "center"
     },
     {
       "type": "end"

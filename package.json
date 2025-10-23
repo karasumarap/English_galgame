@@ -16,7 +16,8 @@
     "preview": "pnpm --filter web preview",
     "lint": "pnpm --filter web lint",
     "type-check": "pnpm --filter web type-check",
-    "test": "pnpm --recursive test"
+    "test": "pnpm --recursive test",
+    "generate:character": "node scripts/generate-character.js"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",

@@ -10,7 +10,20 @@ import type {
   ChoiceCommand,
   QuizCommand,
   Language,
+  Character,
+  SayCommand,
 } from './types'
+
+/**
+ * 現在表示中のキャラクタースプライト情報
+ */
+export interface ActiveCharacterSprite {
+  character: Character
+  emotion: string
+  outfit?: string
+  position: 'left' | 'center' | 'right'
+  visible: boolean
+}
 
 export class VNEngine {
   private scene: Scene | null = null
@@ -18,6 +31,7 @@ export class VNEngine {
   private commandIndex = 0
   private labels: Map<string, number> = new Map()
   private language: Language = 'jp'
+  private activeSprites: Map<string, ActiveCharacterSprite> = new Map()  // キャラクターID -> スプライト情報
 
   constructor(initialState?: Partial<GameState>) {
     this.state = {
@@ -35,12 +49,27 @@ export class VNEngine {
     this.scene = scene
     this.commandIndex = 0
     this.labels.clear()
+    this.activeSprites.clear()  // スプライトもクリア
     this.state.currentScene = scene.id
 
     // ラベルのインデックスを構築
     scene.script.forEach((cmd, index) => {
       if (cmd.type === 'label') {
         this.labels.set(cmd.id, index)
+      }
+    })
+
+    // シーン開始時に全キャラクターを表示（最初のキャラクター以外は非表示）
+    scene.characters.forEach((character) => {
+      if (character.id !== 'hero') {
+        // 主人公以外は自動表示（デフォルトはセンター）
+        this.activeSprites.set(character.id, {
+          character,
+          emotion: 'normal',
+          outfit: undefined,
+          position: 'center',  // デフォルトは常にセンター
+          visible: true,
+        })
       }
     })
   }
@@ -141,6 +170,9 @@ export class VNEngine {
 
   private executeCommand(cmd: ScriptCommand): void {
     switch (cmd.type) {
+      case 'say':
+        this.updateCharacterSprite(cmd)
+        break
       case 'goto':
         this.jump(cmd.target)
         break
@@ -151,6 +183,64 @@ export class VNEngine {
       default:
         break
     }
+  }
+
+  /**
+   * sayコマンドに基づいてキャラクタースプライトを更新
+   */
+  private updateCharacterSprite(cmd: SayCommand): void {
+    if (!this.scene) return
+
+    // キャラクターを探す
+    const character = this.scene.characters.find((c) => c.id === cmd.who)
+    if (!character) return
+
+    // スプライト情報を更新（既存のスプライトがあればそれを更新）
+    const existingSprite = this.activeSprites.get(character.id)
+    const position = cmd.position || existingSprite?.position || 'center'
+    const emotion = cmd.emotion || 'normal'
+    const outfit = cmd.outfit
+
+    console.log('🎭 スプライト更新:', {
+      who: cmd.who,
+      emotion,
+      position,
+      outfit,
+      visible: true,
+      activeSpritesCount: this.activeSprites.size
+    })
+
+    this.activeSprites.set(character.id, {
+      character,
+      emotion,
+      outfit,
+      position,
+      visible: true,  // 常に表示
+    })
+  }
+
+  /**
+   * 現在表示中のキャラクタースプライトを取得
+   */
+  getActiveSprites(): Map<string, ActiveCharacterSprite> {
+    return new Map(this.activeSprites)
+  }
+
+  /**
+   * 特定のキャラクターのスプライトを非表示にする
+   */
+  hideCharacter(characterId: string): void {
+    const sprite = this.activeSprites.get(characterId)
+    if (sprite) {
+      sprite.visible = false
+    }
+  }
+
+  /**
+   * すべてのキャラクタースプライトをクリア
+   */
+  clearAllSprites(): void {
+    this.activeSprites.clear()
   }
 
   getState(): GameState {
