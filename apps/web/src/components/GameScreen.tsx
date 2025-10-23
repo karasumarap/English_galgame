@@ -5,6 +5,7 @@
 
 import { useEffect, useState } from 'react'
 import { VNEngine } from '@engine/runtime'
+import type { ActiveCharacterSprite } from '@engine/runtime'
 import { loadScene } from '@engine/loader'
 import { loadLessonCards, filterLearnedCards } from '@engine/cardLoader'
 import { useGameStore } from '@state/gameStore'
@@ -13,6 +14,7 @@ import type { SaveData } from '@systems/saveLoad'
 import DialogueBox from './DialogueBox'
 import ChoiceList from './ChoiceList'
 import Background from './Background'
+import CharacterSprite from './CharacterSprite'
 import ChapterComplete from './ChapterComplete'
 import ReviewQuiz from './ReviewQuiz'
 import ReviewResults from './ReviewResults'
@@ -34,6 +36,7 @@ const GameScreen = () => {
   const [showLoadMenu, setShowLoadMenu] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
   const [allCards, setAllCards] = useState<LessonCard[]>([])
+  const [activeSprites, setActiveSprites] = useState<Map<string, ActiveCharacterSprite>>(new Map())
 
   // ストアから言語を取得
   const language = useGameStore((state) => state.language)
@@ -57,6 +60,9 @@ const GameScreen = () => {
         setScene(loadedScene)
         setAllCards(cards)
         
+        // スプライトの初期状態を取得
+        setActiveSprites(engine.getActiveSprites())
+        
         // 最初の表示可能なコマンドを取得
         let cmd = engine.getCurrentCommand()
         while (cmd && (cmd.type === 'label' || cmd.type === 'set')) {
@@ -74,9 +80,16 @@ const GameScreen = () => {
 
   const handleNext = () => {
     engine.next()
+    
+    // スプライト状態を先に更新（labelスキップ前に）
+    const spritesBeforeSkip = engine.getActiveSprites()
+    console.log('🔵 labelスキップ前のスプライト数:', spritesBeforeSkip.size)
+    setActiveSprites(spritesBeforeSkip)
+    
     // ラベルなどの非表示コマンドをスキップ
     let nextCmd = engine.getCurrentCommand()
     while (nextCmd && (nextCmd.type === 'label' || nextCmd.type === 'set')) {
+      console.log('⏭️ スキップ:', nextCmd.type, nextCmd.type === 'label' ? `(${nextCmd.id})` : '')
       engine.next()
       nextCmd = engine.getCurrentCommand()
     }
@@ -88,6 +101,10 @@ const GameScreen = () => {
     }
     
     setCurrentCommand(nextCmd)
+    // スプライト状態を再度更新（最終コマンドの状態を反映）
+    const spritesAfterSkip = engine.getActiveSprites()
+    console.log('🟢 labelスキップ後のスプライト数:', spritesAfterSkip.size)
+    setActiveSprites(spritesAfterSkip)
   }
 
   const handleOpenSaveMenu = () => setShowSaveMenu(true)
@@ -170,7 +187,10 @@ const GameScreen = () => {
   const handleChoice = (optionId: string) => {
     const cmd = currentCommand
     if (cmd?.type === 'choice') {
+      console.log('🔷 選択肢実行前のスプライト数:', engine.getActiveSprites().size)
       engine.executeChoice(optionId, cmd)
+      console.log('🔷 選択肢実行後のスプライト数:', engine.getActiveSprites().size)
+      
       // ラベルなどの非表示コマンドをスキップ
       let nextCmd = engine.getCurrentCommand()
       console.log('After executeChoice, current command:', nextCmd)
@@ -180,6 +200,11 @@ const GameScreen = () => {
         console.log('Skipped to:', nextCmd)
       }
       setCurrentCommand(nextCmd)
+      
+      // スプライト状態を更新
+      const finalSprites = engine.getActiveSprites()
+      console.log('🔷 最終スプライト数:', finalSprites.size, 'IDs:', Array.from(finalSprites.keys()))
+      setActiveSprites(finalSprites)
     }
   }
 
@@ -237,12 +262,25 @@ const GameScreen = () => {
   }
 
   return (
-    <div className="relative w-full h-screen overflow-hidden bg-vn-bg">
-      {/* 背景 */}
+    <div className="relative w-full h-screen overflow-hidden bg-black">
+      {/* 背景 (z-index: 0) */}
       <Background image={scene.background} />
 
-      {/* HUD: セーブ/ロードボタン */}
-      <div className="absolute top-4 left-4 flex gap-2 z-20">
+      {/* キャラクタースプライト (z-index: 10-20) */}
+      {Array.from(activeSprites.values()).map((spriteData) => (
+        <CharacterSprite
+          key={spriteData.character.id}
+          character={spriteData.character}
+          emotion={spriteData.emotion}
+          outfit={spriteData.outfit}
+          position={spriteData.position}
+          visible={spriteData.visible}
+          speaking={currentCommand?.type === 'say' && currentCommand.who === spriteData.character.id}
+        />
+      ))}
+
+      {/* HUD: セーブ/ロードボタン (z-index: 40) */}
+      <div className="absolute top-4 left-4 flex gap-2 z-40">
         <button
           onClick={handleOpenSaveMenu}
           className="px-3 py-2 bg-vn-choice hover:bg-vn-choice-hover text-vn-text rounded-md text-sm font-medium"
@@ -263,8 +301,8 @@ const GameScreen = () => {
         </button>
       </div>
 
-      {/* メインコンテンツエリア */}
-      <div className="relative z-10 w-full h-full flex flex-col justify-end p-8">
+      {/* メインコンテンツエリア (z-index: 30) */}
+      <div className="relative z-30 w-full h-full flex flex-col justify-end p-8">
         {/* デバッグ情報 */}
         {!currentCommand && (
           <div className="bg-red-500 p-4 rounded-lg mb-4">

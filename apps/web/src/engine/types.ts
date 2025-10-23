@@ -8,10 +8,27 @@ export interface LocalizedText {
   jp: string
 }
 
+/**
+ * キャラクタースプライトセット
+ * 複数の表情・服装のバリエーションを管理
+ */
+export interface SpriteSet {
+  // デフォルトスプライト
+  default: string
+  // 表情バリエーション (outfit指定なしの場合に使用)
+  emotions?: Record<string, string>
+  // 服装バリエーション (各服装ごとに表情も持つ)
+  outfits?: Record<string, {
+    default: string
+    emotions?: Record<string, string>
+  }>
+}
+
 export interface Character {
   id: string
   name: LocalizedText
-  sprite?: string
+  sprite?: string  // 後方互換性のため残す
+  sprites?: SpriteSet  // 新しいスプライト管理方式
   voice?: string
 }
 
@@ -19,7 +36,10 @@ export interface SayCommand {
   type: 'say'
   who: string
   text: LocalizedText
-  emotion?: string
+  emotion?: string  // 表情: 'normal', 'smile', 'angry', 'sad', 'surprised', 'happy', 'kind' など
+  outfit?: string   // 服装: 'default', 'uniform', 'casual' など
+  pose?: string     // ポーズ（将来の拡張用）
+  position?: 'left' | 'center' | 'right'  // キャラクターの画面上の位置
   voice?: string
 }
 
