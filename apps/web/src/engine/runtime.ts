@@ -254,6 +254,10 @@ export class VNEngine {
     }
   }
 
+  setAffection(character: string, value: number): void {
+    this.state.affection[character] = value
+  }
+
   saveGame(): string {
     const saveData = {
       ...this.state,

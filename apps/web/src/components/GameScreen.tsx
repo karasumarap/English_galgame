@@ -20,6 +20,7 @@ import ReviewQuiz from './ReviewQuiz'
 import ReviewResults from './ReviewResults'
 import SaveLoadMenu from './SaveLoadMenu'
 import SettingsMenu from './SettingsMenu'
+import VoiceConversation from './VoiceConversation'
 
 const GameScreen = () => {
   const [engine] = useState(() => new VNEngine())
@@ -35,6 +36,7 @@ const GameScreen = () => {
   const [showSaveMenu, setShowSaveMenu] = useState(false)
   const [showLoadMenu, setShowLoadMenu] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
+  const [showVoiceConversation, setShowVoiceConversation] = useState(false)
   const [allCards, setAllCards] = useState<LessonCard[]>([])
   const [activeSprites, setActiveSprites] = useState<Map<string, ActiveCharacterSprite>>(new Map())
 
@@ -113,6 +115,15 @@ const GameScreen = () => {
   const handleCloseLoadMenu = () => setShowLoadMenu(false)
   const handleOpenSettings = () => setShowSettings(true)
   const handleCloseSettings = () => setShowSettings(false)
+  const handleOpenVoiceConversation = () => setShowVoiceConversation(true)
+  const handleCloseVoiceConversation = () => setShowVoiceConversation(false)
+
+  const handleAffectionChange = (delta: number) => {
+    const state = engine.getState()
+    const currentAffection = state.affection['heroine'] || 0
+    const newAffection = currentAffection + delta
+    engine.setAffection('heroine', newAffection)
+  }
 
     const handleLoadState = async (saveData: SaveData) => {
     console.log('🟡 ロード開始:', {
@@ -261,6 +272,22 @@ const GameScreen = () => {
     )
   }
 
+  // 音声会話画面
+  if (showVoiceConversation && scene) {
+    const emma = scene.characters.find((c) => c.id === 'emma')
+    if (emma) {
+      return (
+        <VoiceConversation
+          character={emma}
+          language={language}
+          currentAffection={engine.getState().affection['heroine'] || 0}
+          onAffectionChange={handleAffectionChange}
+          onExit={handleCloseVoiceConversation}
+        />
+      )
+    }
+  }
+
   return (
     <div className="relative w-full h-screen overflow-hidden bg-black">
       {/* 背景 (z-index: 0) */}
@@ -298,6 +325,12 @@ const GameScreen = () => {
           className="px-3 py-2 bg-vn-choice hover:bg-vn-choice-hover text-vn-text rounded-md text-sm font-medium"
         >
           ⚙️ Settings
+        </button>
+        <button
+          onClick={handleOpenVoiceConversation}
+          className="px-3 py-2 bg-vn-accent hover:bg-vn-accent/80 text-white rounded-md text-sm font-medium"
+        >
+          🎤 Voice Chat
         </button>
       </div>
 
